@@ -1,5 +1,3 @@
-
-
 mkdir multi-projects
 cd multi-projects
 git init
