@@ -21,6 +21,7 @@ public class UserInfoController {
     @Autowired
     private UserInfoService userInfoService;
 
+    // http://localhost:10086/UserInfo/getAllUserInfo
     @RequestMapping("/getAllUserInfo")
     public ModelAndView getAllUserInfo(){
         Result result=userInfoService.getAllUser();
@@ -30,16 +31,19 @@ public class UserInfoController {
         return mv;
     }
 
+    // http://localhost:10086/UserInfo/page
     @RequestMapping("page")
     public Result<PageInfo<UserInfo>> page(UserInfo entity, PageCondition pageCondition) {
         return userInfoService.page(entity,pageCondition);
     }
 
+    // http://localhost:10086/UserInfo/list
     @RequestMapping("list")
     public Result<List<UserInfo>> list(UserInfo entity) {
         return userInfoService.list(entity);
     }
 
+    // http://localhost:10086/UserInfo/get/55
     @RequestMapping("get/{id}")
     public Result<UserInfo> get(@PathVariable("id") Integer id) {
         return userInfoService.get(id);
@@ -50,6 +54,7 @@ public class UserInfoController {
         return userInfoService.save(entity);
     }
 
+    // http://localhost:10086/UserInfo/delete/55
     @RequestMapping("delete/{id}")
     public Result<Integer> delete(@PathVariable("id") Integer id){
         return userInfoService.delete(id);
