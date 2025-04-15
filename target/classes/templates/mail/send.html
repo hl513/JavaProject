@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>Spring Boot 邮件发送</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    input, textarea, button { display: block; margin: 10px 0; width: 100%; max-width: 500px; }
+    .section { margin-bottom: 40px; }
+  </style>
+</head>
+<body>
+<h1>邮件发送演示</h1>
+
+<div class="section">
+  <h2>发送简单邮件</h2>
+  <input id="simple-to" placeholder="收件人邮箱" />
+  <input id="simple-subject" placeholder="邮件主题" />
+  <textarea id="simple-content" placeholder="邮件内容"></textarea>
+  <button onclick="sendSimpleMail()">发送简单邮件</button>
+</div>
+
+<div class="section">
+  <h2>发送 HTML 邮件</h2>
+  <input id="html-to" placeholder="收件人邮箱" />
+  <input id="html-subject" placeholder="邮件主题" />
+  <input id="html-username" placeholder="用户名 (用于模板变量)" />
+  <button onclick="sendHtmlMail()">发送 HTML 邮件</button>
+</div>
+
+<div class="section">
+  <h2>发送带附件的 HTML 邮件（选择文件）</h2>
+  <input id="att-to" placeholder="收件人邮箱" />
+  <input id="att-subject" placeholder="邮件主题" />
+  <input id="att-username" placeholder="用户名 (用于模板变量)" />
+  <input id="att-files" type="file" multiple />
+  <button onclick="sendAttachmentsMail()">发送带附件的 HTML 邮件</button>
+</div>
+
+<script>
+  function sendSimpleMail() {
+    const data = {
+      to: document.getElementById('simple-to').value,
+      subject: document.getElementById('simple-subject').value,
+      content: document.getElementById('simple-content').value
+    };
+
+    fetch('/mail/simple', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+            .then(res => res.text())
+            .then(alert);
+  }
+
+  function sendHtmlMail() {
+    const data = {
+      to: document.getElementById('html-to').value,
+      subject: document.getElementById('html-subject').value,
+      username: document.getElementById('html-username').value
+    };
+
+    fetch('/mail/html', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+            .then(res => res.text())
+            .then(alert);
+  }
+
+  function sendAttachmentsMail() {
+    const formData = new FormData();
+    formData.append('to', document.getElementById('att-to').value);
+    formData.append('subject', document.getElementById('att-subject').value);
+    formData.append('username', document.getElementById('att-username').value);
+
+    const files = document.getElementById('att-files').files;
+    for (let i = 0; i < files.length; i++) {
+      formData.append('files', files[i]); // 后端接收 @RequestParam("files")
+    }
+
+    fetch('/mail/upload-attachment', {
+      method: 'POST',
+      body: formData
+    })
+            .then(res => res.text())
+            .then(alert)
+            .catch(err => alert("上传出错：" + err));
+  }
+
+</script>
+</body>
+</html>
