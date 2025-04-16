@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxx.hep.mapper.primary.UserMapper">
+
+    <resultMap type="com.xxx.hep.entity.User" id="UserVOMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="birthday" column="birthday" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--根据ID查详情-->
+    <select id="queryById" parameterType="long" resultMap="UserVOMap">
+        SELECT idnamebirthday
+        FROM user
+        WHERE id = #{id} LIMIT 1
+    </select>
+
+    <select id="selectAll" resultType="com.xxx.hep.entity.User">
+        select id,name,birthday
+        from user
+    </select>
+
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO user(namebirthday)
+        VALUES (#{name}#{birthday})
+    </insert>
+
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        UPDATE user
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        DELETE
+        FROM user
+        WHERE id = #{id}
+    </delete>
+
+</mapper>
